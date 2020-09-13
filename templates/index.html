@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bin Manager</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="{{ url_for('static', filename='css/tether.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+            <br>
+            <h2>
+                    <img src="{{ url_for('static', filename='img/logo.png') }}"> Harvest Bin Manager
+            </h2>
+            <br>
+            
+			<div class="tabbable" id="tabs-571554">
+				<ul class="nav nav-pills nav-justified" id="tabSelection" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" href="#newBinTab" data-toggle="tab">New bin</a>
+                    </li>
+                    <li class="nav-item">
+						<a class="nav-link" href="#checkoutBinTab" data-toggle="tab">Check Out</a>
+                    </li>
+					<li class="nav-item">
+						<a class="nav-link" href="#checkinBinTab" data-toggle="tab">Check In</a>
+                    </li>
+                    <li class="nav-item">
+						<a class="nav-link" href="#printBinTab" data-toggle="tab">RePrint</a>
+                    </li>
+				</ul>
+				<div class="tab-content" id="tabContent">
+					<div class="tab-pane active" id="newBinTab">
+                        <div class="jumbotron">
+                            <div class="container sending-msg hidden" id="createBinProcessing">
+                                <h2>Processing ...</h2>
+                            </div>
+
+                            <div class="container sending-msg hidden" id="createBinPrinting">
+                                <h2>Bin Created! Printing ...</h2>
+                            </div>
+            
+                            <div class="container failed-msg hidden" id="createBinFailed">
+                                <h2>Failed to create bin. Please get help from Ryan.
+                                </h2>
+                            </div>
+            
+                            <div class="container success-msg hidden" id="createBinSuccess">
+                                <h2>Bin Created & Printed!</h2>
+                            </div>
+
+                            <form name="createNewBin" id="createBinForm" class="bin-form">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group" id="cultivarList">
+                                            <label class="bold">Cultivar Name</label><br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="bold">Water Activity</label><br>
+                                            <input name="WaterActivity" type="text" placeholder="wa" required>
+                                            <br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="bold">Weight</label><br>
+                                            <input name="RawWeight" type="text" placeholder="kg" required>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="bold">Notes</label><br>
+                                            <textarea cols="40" rows="5" name="Notes"></textarea>
+                                        </div>
+
+                                        <input type="hidden" name="State" value="untrimmed">
+
+                                        <div>
+                                            <button type="submit" class="btn btn-primary btn-round">Create & Print</button>
+                                            <button type="clear" class="btn btn-secondary btn-round">Clear</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="checkoutBinTab">
+                        <div class="row">
+                            <div class="col-lg-4"></div>                            
+                            <div class="col-lg-4 text-center">
+                                <br>
+                                <h4>Select a bin</h4><br>
+                                <input id="checkoutBinID" type="text" placeholder="bin #">
+                                <input type="button" id="checkoutBinFilter" name="BinFilter" value="Find Bin" />
+                                <br>
+                            </div>
+                            <div class="col-lg-4"></div>                            
+                        </div>
+                        <div class="jumbotron">
+                            <div class="row">
+                                <div class="col-lg-6 text-center">
+                                    <label class="bold">Bin to Checkout</label>
+                                    <div class="bin-container text-center" id="checkoutBinContainer"></div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="container sending-msg hidden" id="checkoutBinProcessing">
+                                        <h2>Processing ...</h2>
+                                    </div>
+                    
+                                    <div class="container failed-msg hidden" id="checkoutBinFailed">
+                                        <h2>Failed to check-out bin. Please get help from Ryan.
+                                        </h2>
+                                    </div>
+                    
+                                    <div class="container success-msg hidden" id="checkoutBinSuccess">
+                                        <h2>Bin Checked out!</h2>
+                                    </div>
+
+                                    <form name="checkoutBin" id="checkoutBinForm" class="bin-form">
+                                        <input type="hidden" name="Bin" value="" id="checkoutBinContainerBin">
+                                        <input type="hidden" name="State" value="checkedout">
+                                        <div class="form-group">
+                                            <label class="bold">Person checking out material</label><br>
+                                            <input name="Trimmer" type="text" placeholder="name" required>
+                                            <br>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="bold">Notes</label><br>
+                                            <textarea cols="40" rows="5" name="Notes" id="checkoutBinContainerNotes"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-round">Check Out</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="checkinBinTab">
+                        <div class="row">
+                            <div class="col-lg-4"></div>                            
+                            <div class="col-lg-4 text-center">
+                                <br>
+                                <h4>Select a bin</h4><br>
+                                <input id="checkinBinID" type="text" placeholder="bin #">
+                                <input type="button" id="checkinBinFilter" name="BinFilter" value="Find Bin" />
+                                <br>
+                            </div>
+                            <div class="col-lg-4"></div>                            
+                        </div>
+                        <div class="jumbotron">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label class="bold">Bin to Checkin</label>
+                                    <div class="bin-container" id="checkinBinContainer">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="container sending-msg hidden" id="checkinBinProcessing">
+                                        <h2>Processing ...</h2>
+                                    </div>
+
+                                    <div class="container sending-msg hidden" id="checkinBinPrinting">
+                                        <h2>Bin checked-in. Printing ...</h2>
+                                    </div>
+                    
+                                    <div class="container failed-msg hidden" id="checkinBinFailed">
+                                        <h2>Failed to check-in bin. Please get help from Ryan.
+                                        </h2>
+                                    </div>
+                    
+                                    <div class="container success-msg hidden" id="checkinBinSuccess">
+                                        <h2>Bin is Complete!<br>New label printed</h2>
+                                    </div>
+
+                                    <form name="checkinBin" id="checkinBinForm" class="bin-form">
+                                        <input type="hidden" name="Bin" value="" id="checkinBinContainerBin">
+                                        <input type="hidden" name="State" value="trimmed">
+                                        <div class="form-group">
+                                            <label class="bold">Final Weight</label><br>
+                                            <input name="TrimmedWeight" type="text" placeholder="kg" required>
+                                            <br>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="bold">Notes</label><br>
+                                            <textarea cols="40" rows="5" name="Notes" id="checkinBinContainerNotes"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-round">Check In & Print</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+					<div class="tab-pane" id="printBinTab">
+                        <div class="row">
+                            <div class="col-lg-4"></div>                            
+                            <div class="col-lg-4 text-center">
+                                <br>
+                                <h4> Select a bin</h4><br>
+                                <input id="printBinID" type="text" placeholder="bin #">
+                                <input type="button" id="printBinFilter" name="BinFilter" value="Find Bin" />
+                                <br>
+                            </div>
+                            <div class="col-lg-4"></div>                            
+                        </div>
+                        <div class="jumbotron">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label class="bold">Bin to Print</label>
+                                    <div class="bin-container" id="printBinContainer">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="container sending-msg hidden" id="printBinProcessing">
+                                        <h2>Printing ...</h2>
+                                    </div>
+                    
+                                    <div class="container failed-msg hidden" id="printBinFailed">
+                                        <h2>Failed to reprint bin. Please get help from Ryan.
+                                        </h2>
+                                    </div>
+                    
+                                    <div class="container success-msg hidden" id="printBinSuccess">
+                                        <h2>Printed!</h2>
+                                    </div>
+
+                                    <form name="printBin" id="printBinForm" class="bin-form">
+                                        <input type="hidden" name="Bin" value="" id="printBinContainerBin">
+                                        <button type="submit" class="btn btn-primary btn-round">Print</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-google-sheet-to-json.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/tether.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+  </body>
+</html>

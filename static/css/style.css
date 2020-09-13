@@ -1,0 +1,23 @@
+.bold{
+    font-weight: bold;
+}
+.hidden {
+    display: None;
+}
+.bin-container {
+    border: 2px;
+    border-color: black;
+    border-style: solid;
+    width: max-content;
+    margin: auto;
+    padding: 20px;
+}
+#checkoutBinContainer > .checkedout {
+    color:red;
+}
+#checkinBinContainer > .trimmed {
+    color:red;
+}
+#checkinBinContainer > .untrimmed {
+    color:red;
+}
