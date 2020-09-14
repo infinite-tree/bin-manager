@@ -15,6 +15,7 @@ sudo cp bin-manager.service /etc/systemd/system/
 sudo systemctl enable bin-manager.service
 sudo systemctl start bin-manager.service
 
+sudo cp rules.v4 /etc/iptables/
 ```
 Don't forget to edit the config file too.
 
