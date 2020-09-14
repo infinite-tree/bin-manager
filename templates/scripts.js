@@ -57,20 +57,12 @@ var checkoutBinSetup = function() {
             $('#checkoutBinForm').trigger("reset");
             $('#checkoutBinContainer').empty();
             $('#checkoutBinProcessing').addClass('hidden');
+            $('#checkoutBinSuccess').removeClass('hidden');
 
-            var form_data = new FormData();
-            form_data.append('Bin', data["Bin"]);
-            fetch(printBinURL, {
-                method: 'POST',
-                body: form_data
-            }).then(response => response.json()).then(data => {
-                $('#checkoutBinPrinting').addClass('hidden');
-                $('#checkoutBinSuccess').removeClass('hidden');
-                setTimeout(function() {
-                    $('#checkoutBinSuccess').addClass('hidden');
-                    $('#checkoutBinForm').removeClass('hidden');
-                }, 1500);    
-            })
+            setTimeout(function() {
+                $('#checkoutBinSuccess').addClass('hidden');
+                $('#checkoutBinForm').removeClass('hidden');
+            }, 1500);    
         }).catch(error => {
             console.log(error);
             $('#checkoutBinForm').trigger("reset");
@@ -100,13 +92,21 @@ var checkinBinSetup = function() {
             $('#checkinBinProcessing').addClass('hidden');
             $('#checkinBinPrinting').removeClass('hidden');
 
-            // FIXME: trigger the printing!
+            // trigger the printing!
             // using the response object
-
-            setTimeout(function() {
-                $('#checkinBinSuccess').addClass('hidden');
-                $('#checkinBinForm').removeClass('hidden');
-            }, 1500);
+            var form_data = new FormData();
+            form_data.append('Bin', data["Bin"]);
+            fetch(printBinURL, {
+                method: 'POST',
+                body: form_data
+            }).then(response => response.json()).then(data => {
+                $('#checkinBinPrinting').addClass('hidden');
+                $('#checkinBinSuccess').removeClass('hidden');
+                setTimeout(function() {
+                    $('#checkinBinSuccess').addClass('hidden');
+                    $('#checkinBinForm').removeClass('hidden');
+                }, 1500);    
+            })
         }).catch(error => {
             console.log(error);
             $('#checkinBinForm').trigger("reset");
