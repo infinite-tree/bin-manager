@@ -156,6 +156,7 @@ var populateBinInfo = function(bin_container, bin_info) {
     $(bin_container).append('<br><label class="bold">Water Activity:</label> ' + bin_info["wateractivity"] + '<br>');
     $(bin_container).append('<br><label class="bold">Raw Weight:</label> ' + bin_info["rawweight"] + '<br>');
     $(bin_container).append('<br><label class="bold">State:</label><b class="' + bin_info["state"] + '"> ' + bin_info["state"] + '</b><br>');
+    $(bin_container).append('<br><label class="bold">Trimmer:</label> ' + bin_info["trimmer"] + '<br>');
     
     $(bin_container + 'Bin').val(bin_info["bin"]);
     
