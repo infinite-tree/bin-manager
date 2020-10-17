@@ -30,8 +30,15 @@ var createBinSetup = function() {
                     $('#createBinSuccess').addClass('hidden');
                     $('#createBinForm').removeClass('hidden');
                 }, 1500);    
-            })
+            }).catch(error => {
+                console.log(error);
+                $('#createBinForm').trigger("reset");
+                $('#createBinProcessing').addClass('hidden');
+                $('#createBinPrinting').addClass('hidden');
+                $('#createBinFailed').removeClass('hidden');
+            });
         }).catch(error => {
+            console.log(error);
             $('#createBinForm').trigger("reset");
             $('#createBinProcessing').addClass('hidden');
             $('#createBinPrinting').addClass('hidden');
@@ -106,7 +113,12 @@ var checkinBinSetup = function() {
                     $('#checkinBinSuccess').addClass('hidden');
                     $('#checkinBinForm').removeClass('hidden');
                 }, 1500);    
-            })
+            }).catch(error => {
+                console.log(error);
+                $('#checkinBinForm').trigger("reset");
+                $('#checkinBinProcessing').addClass('hidden');
+                $('#checkinBinFailed').removeClass('hidden');
+            });
         }).catch(error => {
             console.log(error);
             $('#checkinBinForm').trigger("reset");
