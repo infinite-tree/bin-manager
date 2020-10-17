@@ -12,6 +12,15 @@ var createBinSetup = function() {
             method: 'POST',
             body: new FormData(createBinForm)
         }).then(response => response.json()).then(data => {
+            if (data["result"] === "error") {
+                console.log(data["error"]);
+                $('#createBinForm').trigger("reset");
+                $('#createBinProcessing').addClass('hidden');
+                $('#createBinPrinting').addClass('hidden');
+                $('#createBinFailed').removeClass('hidden');
+                return;
+            }
+
             $('#createBinForm').trigger("reset");
             $('#createBinProcessing').addClass('hidden');
             $('#createBinPrinting').removeClass('hidden');
@@ -58,6 +67,15 @@ var checkoutBinSetup = function() {
             method: 'POST',
             body: new FormData(checkoutBinForm)
         }).then(response => response.json()).then(data => {
+            if (data["result"] === "error") {
+                console.log(data["error"]);
+                $('#createBinForm').trigger("reset");
+                $('#createBinProcessing').addClass('hidden');
+                $('#createBinPrinting').addClass('hidden');
+                $('#createBinFailed').removeClass('hidden');
+                return;
+            }
+            
             // clear form and bin values
             $('#checkoutBinForm').trigger("reset");
             $('#checkoutBinContainer').empty();
