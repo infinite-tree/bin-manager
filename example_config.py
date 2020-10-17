@@ -6,5 +6,6 @@ values = {
     "createBinScriptURL": "",
     "binTrackerID": "",
     "binTrackerWorksheet": "",
-    "cultivarTrackerWorksheet": ""
+    "cultivarTrackerWorksheet": "",
+    "toteWeightKg": 0.0
 }

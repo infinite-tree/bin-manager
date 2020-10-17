@@ -1,8 +1,8 @@
-const createBinScriptURL = '{{ createBinScriptURL }}';
+const TOTE_KG = {{ toteWeightKg }};
 
+const createBinScriptURL = '{{ createBinScriptURL }}';
 var createBinForm;
 var createBinSetup = function() {
-    // FIXME: re-enable
     populateCultivars();
     // Setup the form
     createBinForm = document.forms['createNewBin'];

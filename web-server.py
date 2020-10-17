@@ -28,6 +28,13 @@ def print_label():
     worksheet_url = "https://spreadsheets.google.com/feeds/list/{binTrackerID}/{binTrackerWorksheet}/public/values?alt=json".format(**config.values)
     bin_data = {}
     content = requests.get(worksheet_url).json()
+    if 'feed' not in content or 'entry' not in content['feed']:
+        response = {
+            "success": False,
+            "error": "Unknown response from google: %s"%(str(content))
+        }
+        return jsonify(response), 500
+
     for entry in content['feed']['entry']:
         row_data = {}
         keys = [k.replace('gsx$', '') for k in entry if k.startswith('gsx$')]
@@ -37,6 +44,7 @@ def print_label():
             bin_data[row_data["bin"]] = row_data
 
     # print(binData)
+    code = 200
     try:
         if bin_number in bin_data:
             print("Printing ", bin_data[bin_number])
@@ -49,6 +57,7 @@ def print_label():
                 "success": False,
                 "error": "Unknown bin: '%s'"%(bin_number)
             }
+            code = 400
     except Exception as e:
         print("Failed")
         print(str(e))
@@ -56,8 +65,9 @@ def print_label():
             "success": False,
             "error_message": str(e)
         }
+        code = 500
     
-    return jsonify(response), 200
+    return jsonify(response), code
 
 @app.route('/print-file', methods=['POST'])
 def print_file():
