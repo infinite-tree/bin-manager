@@ -1,5 +1,5 @@
  [Unit]
- Description=Outlet Timer Service
+ Description=Bin-Manager Service
  After=multi-user.target
 
  [Service]
