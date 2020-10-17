@@ -28,6 +28,7 @@ def print_label():
     worksheet_url = "https://spreadsheets.google.com/feeds/list/{binTrackerID}/{binTrackerWorksheet}/public/values?alt=json".format(**config.values)
     bin_data = {}
     content = requests.get(worksheet_url).json()
+    # There should be data in the shett at this point
     if 'feed' not in content or 'entry' not in content['feed']:
         response = {
             "success": False,

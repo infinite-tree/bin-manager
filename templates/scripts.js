@@ -1,5 +1,3 @@
-const TOTE_KG = {{ toteWeightKg }};
-
 const createBinScriptURL = '{{ createBinScriptURL }}';
 var createBinForm;
 var createBinSetup = function() {
