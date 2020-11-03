@@ -232,7 +232,7 @@ var populateCultivars = function() {
     .done(function(rows){
         var x = 1;
         rows.forEach(function(row){
-            $('#cultivarList').append('<input type="radio" value="' + row['name'] + '" name="Cultivar" id="cult' + x + '"><label for="cult' + x + '">'+ row['name'] + '</label><br>\n')
+            $('#cultivarList').append('<input type="radio" value="' + row['name'] + '" name="Cultivar" id="cult' + x + '" required><label for="cult' + x + '">'+ row['name'] + '</label><br>\n')
             x = x + 1;
         });
     });

@@ -1,3 +1,4 @@
+import datetime
 import os
 import uuid
 import csv
@@ -90,7 +91,9 @@ def print_file():
 
 @app.route('/', methods=['GET'])
 def main():
-    return render_template("index.html")
+    today = datetime.datetime.today()
+    seven_days = (today - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+    return render_template("index.html", sevenDaysAgo=seven_days)
 
 @app.route('/static/js/scripts.js', methods=['GET'])
 def scripts():

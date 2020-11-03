@@ -65,10 +65,12 @@
 
                             <form name="createNewBin" id="createBinForm" class="bin-form">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <div class="form-group" id="cultivarList">
                                             <label class="bold">Cultivar Name</label><br>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-4">
                                         <div class="form-group">
                                             <label class="bold">Water Activity</label><br>
                                             <input name="WaterActivity" type="text" placeholder="wa" required>
@@ -79,9 +81,22 @@
                                             <input name="RawWeight" type="text" placeholder="kg" required>
                                             <br>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
                                         <div class="form-group">
+                                            <label class="bold">Size</label><br>
+                                            <input type="radio" id="small" name="Size" value="small" required>
+                                            <label for="small">Small</label><br>
+                                            <input type="radio" id="large" name="Size" value="large">
+                                            <label for="large">Large</label><br>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label class="bold">Harvest Date</label><br>
+                                                <input name="HarvestDate" type="date" value="{{ sevenDaysAgo }}" required>
+                                                <br>
+                                            </div>
                                             <label class="bold">Notes</label><br>
                                             <textarea cols="40" rows="5" name="Notes"></textarea>
                                         </div>
