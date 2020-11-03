@@ -92,8 +92,8 @@ def print_file():
 @app.route('/', methods=['GET'])
 def main():
     today = datetime.datetime.today()
-    seven_days = (today - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
-    return render_template("index.html", sevenDaysAgo=seven_days)
+    fourteen_days = (today - datetime.timedelta(days=14)).strftime("%Y-%m-%d")
+    return render_template("index.html", min=fourteen_days, max=today.strftime("%Y-%m-%d"))
 
 @app.route('/static/js/scripts.js', methods=['GET'])
 def scripts():
