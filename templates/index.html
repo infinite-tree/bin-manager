@@ -83,12 +83,22 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="bold">Size</label><br>
-                                            <input type="radio" id="large" name="Size" value="large">
-                                            <label for="large">Top Shelf Larges</label><br>
-                                            <input type="radio" id="small" name="Size" value="small" required>
-                                            <label for="small">Medium and Smalls</label><br>
+                                            <input type="radio" id="newBinLarge" name="Size" value="large">
+                                            <label for="newBinLarge">Top Shelf Larges</label><br>
+                                            <input type="radio" id="newBinSmall" name="Size" value="small" required>
+                                            <label for="newBinSmall">Medium and Smalls</label><br>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="bold">State</label><br>
+                                            <input type="radio" id="newBinColas" name="State" value="colas" checked="checked">
+                                            <label for="newBinColas">Colas</label><br>
+                                            <input type="radio" id="newBinBucked" name="State" value="bucked" required>
+                                            <label for="newBinBucked">Bucked</label><br>
+                                            <input type="radio" id="newBinTrimmed" name="State" value="trimmed" required>
+                                            <label for="newBinTrimmed">Trimmed</label><br>
                                             <br>
                                         </div>
+
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
@@ -100,8 +110,6 @@
                                             <label class="bold">Notes</label><br>
                                             <textarea cols="40" rows="5" name="Notes"></textarea>
                                         </div>
-
-                                        <input type="hidden" name="State" value="untrimmed">
 
                                         <div>
                                             <button type="submit" class="btn btn-primary btn-round">Create & Print</button>
@@ -208,6 +216,16 @@
                                             <label class="bold">Final Weight</label><br>
                                             <input name="TrimmedWeight" type="text" placeholder="kg" required>
                                             <br>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="bold">Size</label><br>
+                                            <input type="radio" id="checkinLarge" name="Size" value="large">
+                                            <label for="checkinLarge">Top Shelf Larges</label><br>
+                                            <input type="radio" id="checkinMedium" name="Size" value="medium" required>
+                                            <label for="checkinMedium">Good Mediums</label><br>
+                                            <input type="radio" id="checkinSmall" name="Size" value="small" required>
+                                            <label for="checkinSmall">Smalls</label><br>
                                         </div>
 
                                         <div class="form-group">
