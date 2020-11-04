@@ -9,6 +9,7 @@ from flask import (Flask,
                    jsonify,
                    send_from_directory)
 import requests
+from requests.utils import requote_uri
 
 # Local imports
 import config
@@ -26,24 +27,27 @@ def print_label():
     bin_number = request.form.get("Bin")
 
     # Fetch the data from the spreadsheet
-    worksheet_url = "https://spreadsheets.google.com/feeds/list/{binTrackerID}/{binTrackerWorksheet}/public/values?alt=json".format(**config.values)
+    worksheet_url = "https://sheets.googleapis.com/v4/spreadsheets/{binTrackerID}/values/Storage Inventory!A1:Z?key={googleAPIKey}".format(**config.values)
     bin_data = {}
-    content = requests.get(worksheet_url).json()
+    content = requests.get(requote_uri(worksheet_url), headers={"referer": "http://bin-manager/"}).json()
     # There should be data in the shett at this point
-    if 'feed' not in content or 'entry' not in content['feed']:
+    if 'values' not in content:
         response = {
             "success": False,
             "error": "Unknown response from google: %s"%(str(content))
         }
         return jsonify(response), 500
 
-    for entry in content['feed']['entry']:
+    keys = content['values'][0]
+    for row in content['values'][1:]:
         row_data = {}
-        keys = [k.replace('gsx$', '') for k in entry if k.startswith('gsx$')]
-        for key in keys:
-            row_data[key] = entry['gsx$' + key]['$t']
-        if "bin" in row_data:
-            bin_data[row_data["bin"]] = row_data
+        for x,key in enumerate(keys):
+            if x < len(row):
+                row_data[key] = row[x]
+            else:
+                row_data[key] = ""
+        if "Bin" in row_data:
+            bin_data[row_data["Bin"]] = row_data
 
     # print(binData)
     code = 200

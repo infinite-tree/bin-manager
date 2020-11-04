@@ -22,6 +22,10 @@ def _print():
         subprocess.run(["glabels-3-batch", "-i", MERGE_CSV, "-o", PRINT_PDF, LABEL_FILE])
         subprocess.run(["lp", PRINT_PDF])
     else:
+        print("Merge Contents: ")
+        with open(MERGE_CSV) as f:
+            print(f.read())
+        print()
         time.sleep(1.5)
 
     # glabels-3-batch -i <input.csv> -o <output.pdf> <label.glabel>
@@ -45,10 +49,10 @@ def printOneLabel(merge_dict):
             new_merge[k] = merge_dict[v]
     
     # FIXME: remove this hack
-    if merge_dict["state"] == "trimmed":
-        new_merge["Lot"] = merge_dict["processlot"]
+    if merge_dict["State"] == "trimmed":
+        new_merge["Lot"] = merge_dict["ProcessLot"]
     else:
-        new_merge["Lot"] = merge_dict["harvestlot"]
+        new_merge["Lot"] = merge_dict["HarvestLot"]
 
 
     # Generate the temporary csv file to merge with the labels
