@@ -265,7 +265,27 @@ $(function () {
     printBinSetup();
 
     $("#checkoutBinFilter").click(findCheckoutBin);
+    $("#checkoutBinID").keyup(function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            findCheckoutBin();
+        }
+    });
+
     $("#checkinBinFilter").click(findCheckinBin);
+    $("#checkinBinID").keyup(function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            findCheckinBin();
+        }
+    });
+
     $("#printBinFilter").click(findPrintBin);
+    $("#printBinID").keyup(function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            findPrintBin();
+        }
+    });
 
 });
