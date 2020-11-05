@@ -1,4 +1,4 @@
-
+var binManagerReady = false;
 var appendToJournal = function(entry) {
     var url = "https://sheets.googleapis.com/v4/spreadsheets/{{ binTrackerID }}/values/Journal!A2:B2:append?valueInputOption=RAW&key={{ googleAPIKey }}";
     var d = new Date();
@@ -457,6 +457,10 @@ var addConsolidationBin = function() {
 
 
 var binManagerInit = function() {
+    if (binManagerReady) {
+        return;
+    }
+    binManagerReady = true;
     createBinSetup();
     checkoutBinSetup();
     checkinBinSetup();
