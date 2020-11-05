@@ -1,3 +1,34 @@
+
+var appendToJournal = function(entry) {
+    var url = "https://sheets.googleapis.com/v4/spreadsheets/{{ binTrackerID }}/values/Journal!A2:B2:append?valueInputOption=RAW&key={{ googleAPIKey }}";
+    var d = new Date();
+    var journal_entry = {
+        "range": "Journal!A2:B2",
+        "majorDimension": "ROWS",
+        "values": [
+            [d.toString(), entry]
+        ]
+    };
+    
+    // return fetch(encodeURI(url), {
+    //     method: 'POST',
+    //     headers: {
+    //         contentType: 'application/json'
+    //     },
+    //     body: JSON.stringify(journal_entry)
+    // });
+    return gapi.client.sheets.spreadsheets.values.append({
+        spreadsheetId: '{{ binTackerID }}',
+        range: 'Journal!A2:B2',
+        valueInputOption: 'RAW',
+        resource: { values: [[d.toString(), entry]]}
+     }).then((response) => {
+       var result = response.result;
+       console.log(`${result.updates.updatedCells} cells appended.`)
+     });
+};
+
+
 const createBinScriptURL = '{{ createBinScriptURL }}';
 var createBinForm;
 var createBinSetup = function() {
@@ -8,35 +39,45 @@ var createBinSetup = function() {
         e.preventDefault();
         $('#createBinForm').addClass('hidden');
         $('#createBinProcessing').removeClass('hidden');
-        fetch(createBinScriptURL, {
-            method: 'POST',
-            body: new FormData(createBinForm)
-        }).then(response => response.json()).then(data => {
-            if (data["result"] === "error") {
-                console.log(data["error"]);
+
+        var formData = new FormData(createBinForm);
+        appendToJournal('CREATE BIN: ' + JSON.stringify(Object.fromEntries(formData))).then(response => response.json()).then(journal_response => {
+            fetch(createBinScriptURL, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json()).then(data => {
+                if (data["result"] === "error") {
+                    console.log(data["error"]);
+                    $('#createBinForm').trigger("reset");
+                    $('#createBinProcessing').addClass('hidden');
+                    $('#createBinPrinting').addClass('hidden');
+                    $('#createBinFailed').removeClass('hidden');
+                    return;
+                }
+
                 $('#createBinForm').trigger("reset");
                 $('#createBinProcessing').addClass('hidden');
-                $('#createBinPrinting').addClass('hidden');
-                $('#createBinFailed').removeClass('hidden');
-                return;
-            }
+                $('#createBinPrinting').removeClass('hidden');
 
-            $('#createBinForm').trigger("reset");
-            $('#createBinProcessing').addClass('hidden');
-            $('#createBinPrinting').removeClass('hidden');
-
-            var form_data = new FormData();
-            form_data.append('Bin', data["Bin"]);
-            fetch(printBinURL, {
-                method: 'POST',
-                body: form_data
-            }).then(response => response.json()).then(data => {
-                $('#createBinPrinting').addClass('hidden');
-                $('#createBinSuccess').removeClass('hidden');
-                setTimeout(function() {
-                    $('#createBinSuccess').addClass('hidden');
-                    $('#createBinForm').removeClass('hidden');
-                }, 1500);    
+                var form_data = new FormData();
+                form_data.append('Bin', data["Bin"]);
+                fetch(printBinURL, {
+                    method: 'POST',
+                    body: form_data
+                }).then(response => response.json()).then(data => {
+                    $('#createBinPrinting').addClass('hidden');
+                    $('#createBinSuccess').removeClass('hidden');
+                    setTimeout(function() {
+                        $('#createBinSuccess').addClass('hidden');
+                        $('#createBinForm').removeClass('hidden');
+                    }, 1500);    
+                }).catch(error => {
+                    console.log(error);
+                    $('#createBinForm').trigger("reset");
+                    $('#createBinProcessing').addClass('hidden');
+                    $('#createBinPrinting').addClass('hidden');
+                    $('#createBinFailed').removeClass('hidden');
+                });
             }).catch(error => {
                 console.log(error);
                 $('#createBinForm').trigger("reset");
@@ -44,12 +85,6 @@ var createBinSetup = function() {
                 $('#createBinPrinting').addClass('hidden');
                 $('#createBinFailed').removeClass('hidden');
             });
-        }).catch(error => {
-            console.log(error);
-            $('#createBinForm').trigger("reset");
-            $('#createBinProcessing').addClass('hidden');
-            $('#createBinPrinting').addClass('hidden');
-            $('#createBinFailed').removeClass('hidden');
         });
     });
 };
@@ -63,34 +98,36 @@ var checkoutBinSetup = function() {
         $('#checkoutBinProcessing').removeClass('hidden');
         var data = new FormData(checkoutBinForm);
         console.log(data);
-        fetch(createBinScriptURL, {
-            method: 'POST',
-            body: new FormData(checkoutBinForm)
-        }).then(response => response.json()).then(data => {
-            if (data["result"] === "error") {
-                console.log(data["error"]);
-                $('#createBinForm').trigger("reset");
-                $('#createBinProcessing').addClass('hidden');
-                $('#createBinPrinting').addClass('hidden');
-                $('#createBinFailed').removeClass('hidden');
-                return;
-            }
-            
-            // clear form and bin values
-            $('#checkoutBinForm').trigger("reset");
-            $('#checkoutBinContainer').empty();
-            $('#checkoutBinProcessing').addClass('hidden');
-            $('#checkoutBinSuccess').removeClass('hidden');
+        appendToJournal('CHECKOUT BIN: ' + JSON.stringify(Object.fromEntries(data))).then(response => response.json()).then(journal_response => {
+            fetch(createBinScriptURL, {
+                method: 'POST',
+                body: new FormData(checkoutBinForm)
+            }).then(response => response.json()).then(data => {
+                if (data["result"] === "error") {
+                    console.log(data["error"]);
+                    $('#createBinForm').trigger("reset");
+                    $('#createBinProcessing').addClass('hidden');
+                    $('#createBinPrinting').addClass('hidden');
+                    $('#createBinFailed').removeClass('hidden');
+                    return;
+                }
+                
+                // clear form and bin values
+                $('#checkoutBinForm').trigger("reset");
+                $('#checkoutBinContainer').empty();
+                $('#checkoutBinProcessing').addClass('hidden');
+                $('#checkoutBinSuccess').removeClass('hidden');
 
-            setTimeout(function() {
-                $('#checkoutBinSuccess').addClass('hidden');
-                $('#checkoutBinForm').removeClass('hidden');
-            }, 1500);    
-        }).catch(error => {
-            console.log(error);
-            $('#checkoutBinForm').trigger("reset");
-            $('#checkoutBinProcessing').addClass('hidden');
-            $('#checkoutBinFailed').removeClass('hidden');
+                setTimeout(function() {
+                    $('#checkoutBinSuccess').addClass('hidden');
+                    $('#checkoutBinForm').removeClass('hidden');
+                }, 1500);    
+            }).catch(error => {
+                console.log(error);
+                $('#checkoutBinForm').trigger("reset");
+                $('#checkoutBinProcessing').addClass('hidden');
+                $('#checkoutBinFailed').removeClass('hidden');
+            });
         });
     });
 };
@@ -375,19 +412,22 @@ var findBin = function(bin_container, bin_field, populate_function) {
 };
 
 var populateCultivars = function() {
-    var url = "https://sheets.googleapis.com/v4/spreadsheets/{{ binTrackerID }}/values/Cultivars!A2:A?key={{ googleAPIKey }}";
-    $.getJSON(encodeURI(url), function(data) {
-        var x = 1;
-        data["values"].forEach(function(row){
-            $('#cultivarList').append('<input type="radio" value="' + row[0] + '" name="Cultivar" id="cult' + x + '" required><label for="cult' + x + '"> &nbsp; '+ row[0] + '</label><br>\n')
-            x = x + 1;
-        });
-    })
-    .fail(function(err){
-        console.log('error!', err);
-        alert("Failed to fetch Cultivar list from Google");
+    gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: '{{ binTrackerID }}',
+        range: 'Cultivars!A2:A',
+    }).then(function(response) {
+        var range = response.result;
+        if (range.values.length > 0) {
+            // console.log(range.values);
+            for (i = 0; i < range.values.length; i++) {
+                var row = range.values[i];
+                var x = i+1;
+                $('#cultivarList').append('<input type="radio" value="' + row[0] + '" name="Cultivar" id="cult' + x + '" required><label for="cult' + x + '"> &nbsp; '+ row[0] + '</label><br>\n')
+            }
+        }
+      }, function(response) {
+        alert("Failed to fetch Cultivars from Google");
     });
-    $('#cultivarList').append('<br>')
 };
 
 
@@ -415,7 +455,8 @@ var addConsolidationBin = function() {
     $('#addConsolidateBinID').val('');
 };
 
-$(function () {  
+
+var binManagerInit = function() {
     createBinSetup();
     checkoutBinSetup();
     checkinBinSetup();
@@ -454,4 +495,11 @@ $(function () {
         }
     });
 
+};
+
+// 
+// Application Entry Point
+// 
+$(function () {
+    startGAuth(binManagerInit);
 });

@@ -99,6 +99,10 @@ def main():
     min_days = (today - datetime.timedelta(days=18)).strftime("%Y-%m-%d")
     return render_template("index.html", min=min_days, max=today.strftime("%Y-%m-%d"))
 
+@app.route('/static/js/gauth.js', methods=['GET'])
+def gauth():
+    return render_template("gauth.js", **config.values)
+
 @app.route('/static/js/scripts.js', methods=['GET'])
 def scripts():
     return render_template("scripts.js", **config.values)

@@ -19,15 +19,28 @@
   </head>
   <body>
 
-    <div class="container-fluid">
+    <div id="googleLoginContent" class="login center">
+        <h2>Login to Google using the Central account</h2>
+        <br>
+        <p id="googleLoadingText">Loading...</p>
+        <button id="googleAuthorizeButton" style="display:none" class="btn btn-primary btn-round">Login</button>
+    </div>
+
+    <div id="applicationContent" class="container-fluid" style="display:none">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-11">
             <br>
             <h2>
                     <img src="{{ url_for('static', filename='img/logo.png') }}"> Harvest Bin Manager
             </h2>
             <br>
-            
+        </div>
+        <div class="col-md-1 center align-self-center">
+                <button id="googleLogoutButton" class="btn btn-secondary btn-round">Logout</button>
+        </div>
+    </div>
+    <div class="row">
+		<div class="col-md-12">
 			<div class="tabbable" id="tabs-571554">
 				<ul class="nav nav-pills nav-justified" id="tabSelection" role="tablist">
 					<li class="nav-item">
@@ -379,9 +392,11 @@
 	</div>
 </div>
 
+    <script src="https://apis.google.com/js/api.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/tether.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/gauth.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
   </body>
 </html>

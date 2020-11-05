@@ -1,4 +1,4 @@
-.bold{
+.bold {
     font-weight: bold;
 }
 .hidden {
@@ -20,4 +20,11 @@
 }
 #checkinBinContainer > .untrimmed {
     color:red;
+}
+.login {
+    margin: auto;
+    width: 50%;
+    border: 3px solid grey;
+    padding: 10px;
+    text-align: center;
 }
