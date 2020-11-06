@@ -29,7 +29,7 @@ def print_label():
     # Fetch the data from the spreadsheet
     worksheet_url = "https://sheets.googleapis.com/v4/spreadsheets/{binTrackerID}/values/Storage Inventory!A1:Z?key={googleAPIKey}".format(**config.values)
     bin_data = {}
-    content = requests.get(requote_uri(worksheet_url), headers={"referer": "http://bin-manager/"}).json()
+    content = requests.get(requote_uri(worksheet_url), headers={"referer": "http://bin-manager.infinite-tree.com"}).json()
     # There should be data in the shett at this point
     if 'values' not in content:
         response = {

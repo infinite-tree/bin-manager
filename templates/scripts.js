@@ -1,33 +1,39 @@
 var binManagerReady = false;
 var appendToJournal = function(entry) {
-    var url = "https://sheets.googleapis.com/v4/spreadsheets/{{ binTrackerID }}/values/Journal!A2:B2:append?valueInputOption=RAW&key={{ googleAPIKey }}";
     var d = new Date();
-    var journal_entry = {
-        "range": "Journal!A2:B2",
-        "majorDimension": "ROWS",
-        "values": [
-            [d.toString(), entry]
-        ]
-    };
-    
-    // return fetch(encodeURI(url), {
-    //     method: 'POST',
-    //     headers: {
-    //         contentType: 'application/json'
-    //     },
-    //     body: JSON.stringify(journal_entry)
-    // });
     return gapi.client.sheets.spreadsheets.values.append({
-        spreadsheetId: '{{ binTackerID }}',
+        spreadsheetId: '{{ binTrackerID }}',
         range: 'Journal!A2:B2',
         valueInputOption: 'RAW',
         resource: { values: [[d.toString(), entry]]}
      }).then((response) => {
-       var result = response.result;
-       console.log(`${result.updates.updatedCells} cells appended.`)
-     });
+        var result = response.result;
+        // console.log(`${result.updates.updatedCells} cells appended to Journal.`)
+     }).catch(error => {
+         alert("Failed to write Journal entry. Its Ryan time"); 
+    });
 };
 
+var addConsolidationToJournal = function(old_bins, new_bin) {
+    var d = new Date();
+    var values = [];
+    for (i in old_bins) {
+        values.push([d.toString(), 'CONSOLIDATE BIN: ' + JSON.stringify(old_bins[i])]);
+    }
+    values.push([d.toString(), 'NEW CONSOLIDATED BIN: ' + JSON.stringify(new_bin)]);
+
+    return gapi.client.sheets.spreadsheets.values.append({
+        spreadsheetId: '{{ binTrackerID }}',
+        range: 'Journal!A2:B2',
+        valueInputOption: 'RAW',
+        resource: { values: values}
+     }).then((response) => {
+        var result = response.result;
+        // console.log(`${result.updates.updatedCells} cells appended to Journal.`)
+     }).catch(error => {
+         alert("Failed to write Consolidation Journal entry. Its Ryan time"); 
+    });
+}
 
 const createBinScriptURL = '{{ createBinScriptURL }}';
 var createBinForm;
@@ -40,11 +46,11 @@ var createBinSetup = function() {
         $('#createBinForm').addClass('hidden');
         $('#createBinProcessing').removeClass('hidden');
 
-        var formData = new FormData(createBinForm);
-        appendToJournal('CREATE BIN: ' + JSON.stringify(Object.fromEntries(formData))).then(response => response.json()).then(journal_response => {
+        var data = new FormData(createBinForm);
+        appendToJournal('CREATE BIN: ' + JSON.stringify(Object.fromEntries(data))).then(journal_response => {
             fetch(createBinScriptURL, {
                 method: 'POST',
-                body: formData
+                body: data
             }).then(response => response.json()).then(data => {
                 if (data["result"] === "error") {
                     console.log(data["error"]);
@@ -97,11 +103,11 @@ var checkoutBinSetup = function() {
         $('#checkoutBinForm').addClass('hidden');
         $('#checkoutBinProcessing').removeClass('hidden');
         var data = new FormData(checkoutBinForm);
-        console.log(data);
-        appendToJournal('CHECKOUT BIN: ' + JSON.stringify(Object.fromEntries(data))).then(response => response.json()).then(journal_response => {
+        // console.log(data);
+        appendToJournal('CHECKOUT BIN: ' + JSON.stringify(Object.fromEntries(data))).then(journal_response => {
             fetch(createBinScriptURL, {
                 method: 'POST',
-                body: new FormData(checkoutBinForm)
+                body: data
             }).then(response => response.json()).then(data => {
                 if (data["result"] === "error") {
                     console.log(data["error"]);
@@ -140,43 +146,45 @@ var checkinBinSetup = function() {
         $('#checkinBinForm').addClass('hidden');
         $('#checkinBinProcessing').removeClass('hidden');
         var data = new FormData(checkinBinForm);
-        console.log(data);
-        fetch(createBinScriptURL, {
-            method: 'POST',
-            body: new FormData(checkinBinForm)
-        }).then(response => response.json()).then(data => {
-            // clear form and bin values
-            $('#checkinBinForm').trigger("reset");
-            $('#checkinBinContainer').empty();
-
-            $('#checkinBinProcessing').addClass('hidden');
-            $('#checkinBinPrinting').removeClass('hidden');
-
-            // trigger the printing!
-            // using the response object
-            var form_data = new FormData();
-            form_data.append('Bin', data["Bin"]);
-            fetch(printBinURL, {
+        // console.log(data);
+        appendToJournal('CHECKIN BIN: ' + JSON.stringify(Object.fromEntries(data))).then(journal_response => {
+            fetch(createBinScriptURL, {
                 method: 'POST',
-                body: form_data
+                body: data
             }).then(response => response.json()).then(data => {
-                $('#checkinBinPrinting').addClass('hidden');
-                $('#checkinBinSuccess').removeClass('hidden');
-                setTimeout(function() {
-                    $('#checkinBinSuccess').addClass('hidden');
-                    $('#checkinBinForm').removeClass('hidden');
-                }, 1500);    
+                // clear form and bin values
+                $('#checkinBinForm').trigger("reset");
+                $('#checkinBinContainer').empty();
+
+                $('#checkinBinProcessing').addClass('hidden');
+                $('#checkinBinPrinting').removeClass('hidden');
+
+                // trigger the printing!
+                // using the response object
+                var form_data = new FormData();
+                form_data.append('Bin', data["Bin"]);
+                fetch(printBinURL, {
+                    method: 'POST',
+                    body: form_data
+                }).then(response => response.json()).then(data => {
+                    $('#checkinBinPrinting').addClass('hidden');
+                    $('#checkinBinSuccess').removeClass('hidden');
+                    setTimeout(function() {
+                        $('#checkinBinSuccess').addClass('hidden');
+                        $('#checkinBinForm').removeClass('hidden');
+                    }, 1500);    
+                }).catch(error => {
+                    console.log(error);
+                    $('#checkinBinForm').trigger("reset");
+                    $('#checkinBinProcessing').addClass('hidden');
+                    $('#checkinBinFailed').removeClass('hidden');
+                });
             }).catch(error => {
                 console.log(error);
                 $('#checkinBinForm').trigger("reset");
                 $('#checkinBinProcessing').addClass('hidden');
                 $('#checkinBinFailed').removeClass('hidden');
             });
-        }).catch(error => {
-            console.log(error);
-            $('#checkinBinForm').trigger("reset");
-            $('#checkinBinProcessing').addClass('hidden');
-            $('#checkinBinFailed').removeClass('hidden');
         });
     });
 };
@@ -214,6 +222,38 @@ var printBinSetup = function() {
     });
 };
 
+var consolidateOldBins = function(old_bins) {
+    var fetch_calls = [];
+    for (i in old_bins) {
+        // Build the form data obj from the dictionary
+        var form_data = new FormData();
+        for ( var key in old_bins[i] ) {
+            form_data.append(key, old_bins[i][key]);
+        }
+
+        // 
+        // Set the New State
+        // 
+        form_data.set('State', 'consolidated')
+
+        // make the fetch call
+        var p = fetch(createBinScriptURL, {
+            method: 'POST',
+            body: form_data
+        }).then(response => response.json()).catch(error => {
+            alert("Failed to update bin: " + error);
+        });
+        fetch_calls.push(p);
+    }
+    // Wait on the results of all the fetch calls
+    return Promise.all(fetch_calls).then(results => {
+        for ( i in results) {
+            console.log("consolidate old bin result: %o", results[i]);
+        }
+        return results;
+    });
+};
+
 var consolidateBinForm;
 var consolidateBinSetup = function() {
     // Setup the form
@@ -223,70 +263,79 @@ var consolidateBinSetup = function() {
         $('#consolidateBinForm').addClass('hidden');
         $('#consolidateBinProcessing').removeClass('hidden');
 
-        // populate the weight for creating a new bin
-        var material_state = $("#consolidateBinWeight").val();
-        var weight = $("#consolidateBinWeight").val();
-        if (material_state === "trimmed") {
-            consolidateBinForm.append('<input type="hidden" name="TrimmedWeight" value="' + weight + '">');
-        } else {
-            consolidateBinForm.append('<input type="hidden" name="RawWeight" value="' + weight + '">');
-        }
-
         // Disable the button
         $("#consolidateBinButton").prop("disabled", true);
 
-        // FIXME: add the journal entry
+        // populate the weight for creating a new bin
+        var data = new FormData(consolidateBinForm);
+        var material_state = data.get("State");
+        var weight = $("#consolidateBinWeight").val();
+        if (material_state === "trimmed") {
+            data.set('TrimmedWeight', weight);
+        } else {
+            data.set('RawWeight', weight);
+        }
 
-        // FIXME: update each bin to consolidated
+        // Hack for disabled fields (prefer it greyed out so no "readonly" tag)
+        data.set('WaterActivity', $("#consolidateWA").val());
 
-        // FIXME: clear the conslidation table
+        console.log(data);
+        
+        // Add the journal entries
+        addConsolidationToJournal(CONSOLIDATE_TABLE, Object.fromEntries(data)).then(journal_response => {
+            // update each bin to consolidated
+            consolidateOldBins(CONSOLIDATE_TABLE).then(reponse => {
+                // clear the conslidation table
+                CONSOLIDATE_TABLE = [];
 
-        fetch(createBinScriptURL, {
-            method: 'POST',
-            body: new FormData(consolidateBinForm)
-        }).then(response => response.json()).then(data => {
-            if (data["result"] === "error") {
-                console.log(data["error"]);
-                $("#consolidateTableBody").empty();
-                $('#consolidateBinForm').trigger("reset");
-                $('#consolidateBinProcessing').addClass('hidden');
-                $('#consolidateBinPrinting').addClass('hidden');
-                $('#consolidateBinFailed').removeClass('hidden');
-                return;
-            }
+                fetch(createBinScriptURL, {
+                    method: 'POST',
+                    body: data
+                }).then(response => response.json()).then(data => {
+                    if (data["result"] === "error") {
+                        console.log(data["error"]);
+                        $("#consolidateTableBody").empty();
+                        $('#consolidateBinForm').trigger("reset");
+                        $('#consolidateBinProcessing').addClass('hidden');
+                        $('#consolidateBinPrinting').addClass('hidden');
+                        $('#consolidateBinFailed').removeClass('hidden');
+                        return;
+                    }
 
-            $("#consolidateTableBody").empty();
-            $('#consolidateBinForm').trigger("reset");
-            $('#consolidateBinProcessing').addClass('hidden');
-            $('#consolidateBinPrinting').removeClass('hidden');
+                    $("#consolidateTableBody").empty();
+                    $('#consolidateBinForm').trigger("reset");
+                    $('#consolidateBinProcessing').addClass('hidden');
+                    $('#consolidateBinPrinting').removeClass('hidden');
 
-            var form_data = new FormData();
-            form_data.append('Bin', data["Bin"]);
-            fetch(printBinURL, {
-                method: 'POST',
-                body: form_data
-            }).then(response => response.json()).then(data => {
-                $('#consolidateBinPrinting').addClass('hidden');
-                $('#consolidateBinSuccess').removeClass('hidden');
-                setTimeout(function() {
-                    $('#consolidateBinSuccess').addClass('hidden');
-                    $('#consolidateBinForm').removeClass('hidden');
-                }, 1500);    
-            }).catch(error => {
-                console.log(error);
-                $("#consolidateTableBody").empty();
-                $('#consolidateBinForm').trigger("reset");
-                $('#consolidateBinProcessing').addClass('hidden');
-                $('#consolidateBinPrinting').addClass('hidden');
-                $('#consolidateBinFailed').removeClass('hidden');
+                    var form_data = new FormData();
+                    form_data.append('Bin', data["Bin"]);
+                    fetch(printBinURL, {
+                        method: 'POST',
+                        body: form_data
+                    }).then(response => response.json()).then(data => {
+                        $('#consolidateBinPrinting').addClass('hidden');
+                        $('#consolidateBinSuccess').removeClass('hidden');
+                        setTimeout(function() {
+                            $('#consolidateBinSuccess').addClass('hidden');
+                            $('#consolidateBinForm').removeClass('hidden');
+                        }, 1500);    
+                    }).catch(error => {
+                        console.log(error);
+                        $("#consolidateTableBody").empty();
+                        $('#consolidateBinForm').trigger("reset");
+                        $('#consolidateBinProcessing').addClass('hidden');
+                        $('#consolidateBinPrinting').addClass('hidden');
+                        $('#consolidateBinFailed').removeClass('hidden');
+                    });
+                }).catch(error => {
+                    console.log(error);
+                    $("#consolidateTableBody").empty();
+                    $('#consolidateBinForm').trigger("reset");
+                    $('#consolidateBinProcessing').addClass('hidden');
+                    $('#consolidateBinPrinting').addClass('hidden');
+                    $('#consolidateBinFailed').removeClass('hidden');
+                });
             });
-        }).catch(error => {
-            console.log(error);
-            $("#consolidateTableBody").empty();
-            $('#consolidateBinForm').trigger("reset");
-            $('#consolidateBinProcessing').addClass('hidden');
-            $('#consolidateBinPrinting').addClass('hidden');
-            $('#consolidateBinFailed').removeClass('hidden');
         });
     });
 };
@@ -303,7 +352,7 @@ var populateBinInfo = function(bin_container, bin_info) {
     $(bin_container + 'Bin').val(bin_info["Bin"]);
     
     var notes = "";
-    if ("notes" in bin_info) {
+    if ("Notes" in bin_info) {
         notes = bin_info["Notes"];
         // HACK:
         $(bin_container + 'Notes').val(notes);
@@ -372,42 +421,42 @@ var populateConsolidateTable = function(table_id, bin_info) {
     }
 };
 
-const binTrackerID = '{{ binTrackerID }}';
 var findBin = function(bin_container, bin_field, populate_function) {
     var bin_number = $(bin_field).val();
     if (bin_number === "") {
         return;
     }
+    gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: '{{ binTrackerID }}',
+        range: 'Storage Inventory!A1:Z',
+    }).then(function(response) {
+        var range = response.result;
+        if (range.values.length > 0) {
+            // console.log(range.values);
+            var keys = [];
+            for (i in range.values[0]) {
+                keys.push(range.values[0][i]);
+            }
 
-    var url = "https://sheets.googleapis.com/v4/spreadsheets/{{ binTrackerID }}/values/Storage Inventory!A1:Z?key={{ googleAPIKey }}";
-    $.getJSON(encodeURI(url), function(data) {
-        var keys = [];
-        for (i in data["values"][0]) {
-            keys.push(data["values"][0][i]);
+            for (i = 1; i < range.values.length; i++) {
+                var row = range.values[i];
+                var bin_info = {};
+
+                // get the cells
+                for (x in keys) {
+                    bin_info[keys[x]] = row[x] !== undefined ? row[x].trim(): "";
+                }
+                // console.log(bin_info);
+                if (bin_info["Bin"] === bin_number) {
+                    console.log("bin_info %o", bin_info);
+                    $(bin_field).val("");
+                    populate_function(bin_container, bin_info);
+                    return;
+                }
+            }
         }
-
-        for (i in data["values"]) {
-            if ( i== 0) {
-                continue;
-            }
-
-            // get the cells
-            var row = data["values"][i];
-            var bin_info = {};
-            for (x in keys) {
-                bin_info[keys[x]] = row[x] !== undefined ? row[x].trim(): "";
-            }
-            // console.log(bin_info);
-            if (bin_info["Bin"] === bin_number) {
-                console.log("bin_info %o", bin_info);
-                populate_function(bin_container, bin_info);
-                return;
-            }
-        }
-    })
-    .fail(function(err){
-        console.log('error!', err);
-        alert("Failed to fetch Storage Inventory");
+    }, function(error) {
+        alert("Failed to fetch Storage Inventory from Google");
     });
 };
 
@@ -425,7 +474,7 @@ var populateCultivars = function() {
                 $('#cultivarList').append('<input type="radio" value="' + row[0] + '" name="Cultivar" id="cult' + x + '" required><label for="cult' + x + '"> &nbsp; '+ row[0] + '</label><br>\n')
             }
         }
-      }, function(response) {
+      }, function(error) {
         alert("Failed to fetch Cultivars from Google");
     });
 };
