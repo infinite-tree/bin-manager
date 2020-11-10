@@ -272,6 +272,7 @@ var consolidateBinSetup = function() {
         var weight = $("#consolidateBinWeight").val();
         if (material_state === "trimmed") {
             data.set('TrimmedWeight', weight);
+            data.set('RawWeight', weight);
         } else {
             data.set('RawWeight', weight);
         }
