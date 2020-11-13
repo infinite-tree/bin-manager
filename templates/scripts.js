@@ -146,6 +146,15 @@ var checkinBinSetup = function() {
         $('#checkinBinForm').addClass('hidden');
         $('#checkinBinProcessing').removeClass('hidden');
         var data = new FormData(checkinBinForm);
+        var material_state = data.get("State");
+        var weight = $("#checkinBinWeight").val();
+        if (material_state === "trimmed") {
+            data.set('TrimmedWeight', weight);
+            data.set('RawWeight', weight);
+        } else {
+            data.set('RawWeight', weight);
+        }
+
         // console.log(data);
         appendToJournal('CHECKIN BIN: ' + JSON.stringify(Object.fromEntries(data))).then(journal_response => {
             fetch(createBinScriptURL, {
