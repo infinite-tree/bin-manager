@@ -515,16 +515,55 @@ var addConsolidationBin = function() {
 };
 
 
+var printPDFURL = '/print-pdf';
+var printPDFSetup = function() {
+    $("#print-pdf-file").change(function(event) {
+        event.preventDefault();
+
+        var files = event.target.files;
+        var data = new FormData();
+        $.each(files, function(k,v) {
+            data.append(k,v);
+        });
+
+        // Processing
+        $("#printPDFForm").addClass('hidden');
+        $("#printPDFProcessing").removeClass('hidden');
+
+        fetch(printPDFURL, {
+            method: 'POST',
+            body: data,
+        }).then(response => response.json()).then(data => {
+            // Success
+            $('#printPDFProcessing').addClass('hidden');
+            $('#printPDFSuccess').removeClass('hidden');
+            setTimeout(function() {
+                $('#printPDFSuccess').addClass('hidden');
+                $('#printPDFForm').removeClass('hidden');
+            }, 1500);
+        }).catch(error => {
+            // Failed
+            console.log(error);
+            $('#printPDFProcessing').addClass('hidden');
+            $('#printPDFFailed').removeClass('hidden');
+        }).finally(() => {
+            $('#printPDFForm').trigger("reset");
+        });
+    });
+};
+
 var binManagerInit = function() {
     if (binManagerReady) {
         return;
     }
     binManagerReady = true;
+
     createBinSetup();
     checkoutBinSetup();
     checkinBinSetup();
     consolidateBinSetup();
     printBinSetup();
+    printPDFSetup();
 
     $("#checkoutBinFilter").click(findCheckoutBin);
     $("#checkoutBinID").keyup(function(event) {

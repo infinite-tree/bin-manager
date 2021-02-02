@@ -8,7 +8,8 @@ import config
 
 PRODUCTION = os.getenv("PRODUCTION")
 
-LABEL_FILE = os.path.join(os.path.dirname(__file__), "glabels", "label.glabels")
+BIN_LABEL_FILE = os.path.join(os.path.dirname(__file__), "glabels", "bin-label.glabels")
+PKG_LABEL_FILE = os.path.join(os.path.dirname(__file__), "glabels", "pkg-label.glabels")
 
 TMP_DIR = os.path.join(os.path.dirname(__file__), "tmp")
 LABEL_CSV = os.path.join(TMP_DIR, "label_data.csv")
@@ -16,23 +17,31 @@ PRINT_PDF = os.path.join(TMP_DIR, "labels.pdf")
 MERGE_CSV = os.path.join(TMP_DIR, "merge.csv")
 
 
-def _print():
+def printPDF(pdf_file):
+    if PRODUCTION:
+        subprocess.run(["lp", pdf_file])
+    else:
+        print("DEV MODE: Printed PDF: %s"%(pdf_file))
+        time.sleep(0.5)
+
+
+def _print(label_file):
     # generate the pdf to print
     if PRODUCTION:
-        subprocess.run(["glabels-3-batch", "-i", MERGE_CSV, "-o", PRINT_PDF, LABEL_FILE])
-        subprocess.run(["lp", PRINT_PDF])
+        subprocess.run(["glabels-3-batch", "-i", MERGE_CSV, "-o", PRINT_PDF, label_file])
     else:
         print("Merge Contents: ")
         with open(MERGE_CSV) as f:
             print(f.read())
         print()
-        time.sleep(1.5)
+        time.sleep(0.5)
 
+    printPDF(PRINT_PDF)
     # glabels-3-batch -i <input.csv> -o <output.pdf> <label.glabel>
     # lp <output.pdf>
 
 
-def printOneLabel(merge_dict):
+def printOneBinLabel(merge_dict):
     '''
     Prints one label using the dictionary as the merge data
     '''
@@ -61,5 +70,5 @@ def printOneLabel(merge_dict):
         w.writeheader()
         w.writerow(new_merge)
     
-    _print()
+    _print(BIN_LABEL_FILE)
     return

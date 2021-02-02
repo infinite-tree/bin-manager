@@ -54,7 +54,7 @@ def print_label():
     try:
         if bin_number in bin_data:
             print("Printing ", bin_data[bin_number])
-            labels.printOneLabel(bin_data[bin_number])
+            labels.printOneBinLabel(bin_data[bin_number])
             response = {
                 "success": True
             }
@@ -75,23 +75,28 @@ def print_label():
     
     return jsonify(response), code
 
-@app.route('/print-file', methods=['POST'])
-def print_file():
-    f = request.files['0']
+
+@app.route('/print-pdf', methods=['POST'])
+def print_pdf():
     response = {
         "success": True
     }
     try:
-        labels.printCSV(f)
+        f = request.files['0']
+        pdf_file = labels.PRINT_PDF
+        f.save(pdf_file)
+
+        labels.printPDF(pdf_file)
     except Exception as e:
-        print("Failed")
+        print("Failed to print pdf")
         print(str(e))
         response = {
             "success": False,
             "error_message": str(e)
         }
     
-    return jsonify(response), 200    
+    return jsonify(response), 200
+
 
 @app.route('/', methods=['GET'])
 def main():

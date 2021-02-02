@@ -43,362 +43,454 @@
     <div class="row">
 		<div class="col-md-12">
 			<div class="tabbable" id="tabs-571554">
-				<ul class="nav nav-pills nav-justified" id="tabSelection" role="tablist">
-					<li class="nav-item">
-						<a class="nav-link active" href="#newBinTab" data-toggle="tab">New bin</a>
+                <ul class="nav nav-pills nav-fill" id="tabSelection" role="tablist">
+                    <li class="nav-item">
+						<a class="nav-link active" href="#harvestSelection" data-toggle="tab">Harvest</a>
                     </li>
                     <li class="nav-item">
-						<a class="nav-link" href="#checkoutBinTab" data-toggle="tab">Check Out</a>
+						<a class="nav-link" href="#salesSelection" data-toggle="tab">Sales</a>
                     </li>
-					<li class="nav-item">
-						<a class="nav-link" href="#checkinBinTab" data-toggle="tab">Check In</a>
-                    </li>
-                    <li class="nav-item">
-						<a class="nav-link" href="#consolidateTab" data-toggle="tab">Consolidate</a>
-                    </li>
-                    <li class="nav-item">
-						<a class="nav-link" href="#printBinTab" data-toggle="tab">RePrint</a>
-                    </li>
-				</ul>
-				<div class="tab-content" id="tabContent">
-					<div class="tab-pane active" id="newBinTab">
-                        <div class="jumbotron">
-                            <div class="container sending-msg hidden" id="createBinProcessing">
-                                <h2>Processing ...</h2>
-                            </div>
+                </ul>
+                <div class="tab-content" id="navTabContent">
+                    <!-- Harvest Pane -->
+                    <div class="tab-pane active" id="harvestSelection">
+                        <div class="tabbable">
+                            <!-- Harvest Nav -->
+                            <ul class="nav nav-tabs nav-fill" id="harvestTabSelection" role="harvestTablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#newBinTab" data-toggle="tab">New bin</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#checkoutBinTab" data-toggle="tab">Check Out</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#checkinBinTab" data-toggle="tab">Check In</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#consolidateTab" data-toggle="tab">Consolidate</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#printBinTab" data-toggle="tab">RePrint</a>
+                                </li>
+                            </ul>
 
-                            <div class="container sending-msg hidden" id="createBinPrinting">
-                                <h2>Bin Created! Printing ...</h2>
-                            </div>
-            
-                            <div class="container failed-msg hidden" id="createBinFailed">
-                                <h2>Failed to create bin. Please get help from Ryan.
-                                </h2>
-                            </div>
-            
-                            <div class="container success-msg hidden" id="createBinSuccess">
-                                <h2>Bin Created & Printed!</h2>
-                            </div>
+                            <!-- Harvest Content -->
+                            <div class="tab-content" id="harvestTabContent">
+                                <!-- Harvest: New Bin -->
+                                <div class="tab-pane active" id="newBinTab">
+                                    <div class="jumbotron">
+                                        <div class="container sending-msg hidden" id="createBinProcessing">
+                                            <h2>Processing ...</h2>
+                                        </div>
 
-                            <form name="createNewBin" id="createBinForm" class="bin-form">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="form-group" id="cultivarList">
-                                            <label class="bold">Cultivar Name</label><br>
+                                        <div class="container sending-msg hidden" id="createBinPrinting">
+                                            <h2>Bin Created! Printing ...</h2>
+                                        </div>
+
+                                        <div class="container failed-msg hidden" id="createBinFailed">
+                                            <h2>Failed to create bin. Please get help from Ryan.
+                                            </h2>
+                                        </div>
+
+                                        <div class="container success-msg hidden" id="createBinSuccess">
+                                            <h2>Bin Created & Printed!</h2>
+                                        </div>
+
+                                        <form name="createNewBin" id="createBinForm" class="bin-form">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <div class="form-group" id="cultivarList">
+                                                        <label class="bold">Cultivar Name</label><br>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="form-group">
+                                                        <label class="bold">Water Activity</label><br>
+                                                        <input name="WaterActivity" type="text" placeholder="wa" required>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="bold">Weight</label><br>
+                                                        <input name="RawWeight" type="text" placeholder="kg" required>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="bold">Size</label><br>
+                                                        <input type="radio" id="newBinLarge" name="Size" value="large">
+                                                        <label for="newBinLarge">Top Shelf Larges</label><br>
+                                                        <input type="radio" id="newBinSmall" name="Size" value="small" required>
+                                                        <label for="newBinSmall">Medium and Smalls</label><br>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="bold">State</label><br>
+                                                        <input type="radio" id="newBinColas" name="State" value="colas" checked="checked">
+                                                        <label for="newBinColas">Colas</label><br>
+                                                        <input type="radio" id="newBinBucked" name="State" value="bucked" required>
+                                                        <label for="newBinBucked">Bucked</label><br>
+                                                        <input type="radio" id="newBinTrimmed" name="State" value="trimmed" required>
+                                                        <label for="newBinTrimmed">Trimmed</label><br>
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="form-group">
+                                                        <div class="form-group">
+                                                            <label class="bold">Harvest Date</label><br>
+                                                            <input name="HarvestDate" type="date" min="{{ min }}" max="{{ max }}" required>
+                                                            <br>
+                                                        </div>
+                                                        <label class="bold">Notes</label><br>
+                                                        <textarea cols="40" rows="5" name="Notes"></textarea>
+                                                    </div>
+
+                                                    <div>
+                                                        <button type="submit" class="btn btn-primary btn-round">Create & Print</button>
+                                                        <button type="clear" class="btn btn-secondary btn-round">Clear</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Harvest: Checkout -->
+                                <div class="tab-pane" id="checkoutBinTab">
+                                    <div class="row">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-4 text-center">
+                                            <br>
+                                            <h4>Select a bin</h4><br>
+                                            <input id="checkoutBinID" type="text" placeholder="bin #">
+                                            <input type="button" id="checkoutBinFilter" name="BinFilter" value="Find Bin" />
+                                            <br>
+                                        </div>
+                                        <div class="col-lg-4"></div>
+                                    </div>
+                                    <div class="jumbotron">
+                                        <div class="row">
+                                            <div class="col-lg-6 text-center">
+                                                <label class="bold">Bin to Checkout</label>
+                                                <div class="bin-container" id="checkoutBinContainer"></div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="container sending-msg hidden" id="checkoutBinProcessing">
+                                                    <h2>Processing ...</h2>
+                                                </div>
+
+                                                <div class="container failed-msg hidden" id="checkoutBinFailed">
+                                                    <h2>Failed to check-out bin. Please get help from Ryan.
+                                                    </h2>
+                                                </div>
+
+                                                <div class="container success-msg hidden" id="checkoutBinSuccess">
+                                                    <h2>Bin Checked out!</h2>
+                                                </div>
+
+                                                <form name="checkoutBin" id="checkoutBinForm" class="bin-form">
+                                                    <input type="hidden" name="Bin" value="" id="checkoutBinContainerBin">
+                                                    <input type="hidden" name="State" value="checkedout">
+                                                    <div class="form-group">
+                                                        <label class="bold">Person checking out material</label><br>
+                                                        <input name="Trimmer" type="text" placeholder="name" required>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="bold">Notes</label><br>
+                                                        <textarea cols="40" rows="5" name="Notes" id="checkoutBinContainerNotes"></textarea>
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary btn-round">Check Out</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="bold">Water Activity</label><br>
-                                            <input name="WaterActivity" type="text" placeholder="wa" required>
+                                </div>
+
+                                <!-- Harvest: Checkin -->
+                                <div class="tab-pane" id="checkinBinTab">
+                                    <div class="row">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-4 text-center">
+                                            <br>
+                                            <h4>Select a bin</h4><br>
+                                            <input id="checkinBinID" type="text" placeholder="bin #">
+                                            <input type="button" id="checkinBinFilter" name="BinFilter" value="Find Bin" />
                                             <br>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="bold">Weight</label><br>
-                                            <input name="RawWeight" type="text" placeholder="kg" required>
-                                            <br>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="bold">Size</label><br>
-                                            <input type="radio" id="newBinLarge" name="Size" value="large">
-                                            <label for="newBinLarge">Top Shelf Larges</label><br>
-                                            <input type="radio" id="newBinSmall" name="Size" value="small" required>
-                                            <label for="newBinSmall">Medium and Smalls</label><br>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="bold">State</label><br>
-                                            <input type="radio" id="newBinColas" name="State" value="colas" checked="checked">
-                                            <label for="newBinColas">Colas</label><br>
-                                            <input type="radio" id="newBinBucked" name="State" value="bucked" required>
-                                            <label for="newBinBucked">Bucked</label><br>
-                                            <input type="radio" id="newBinTrimmed" name="State" value="trimmed" required>
-                                            <label for="newBinTrimmed">Trimmed</label><br>
-                                            <br>
+                                        <div class="col-lg-4"></div>
+                                    </div>
+                                    <div class="jumbotron">
+                                        <div class="row">
+                                            <div class="col-lg-4 text-center">
+                                                <label class="bold">Bin to Checkin</label>
+                                                <div class="bin-container" id="checkinBinContainer">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="container sending-msg hidden" id="checkinBinProcessing">
+                                                    <h2>Processing ...</h2>
+                                                </div>
+
+                                                <div class="container sending-msg hidden" id="checkinBinPrinting">
+                                                    <h2>Bin checked-in. Printing ...</h2>
+                                                </div>
+
+                                                <div class="container failed-msg hidden" id="checkinBinFailed">
+                                                    <h2>Failed to check-in bin. Please get help from Ryan.
+                                                    </h2>
+                                                </div>
+
+                                                <div class="container success-msg hidden" id="checkinBinSuccess">
+                                                    <h2>Bin is Complete!<br>New label printed</h2>
+                                                </div>
+
+                                                <form name="checkinBin" id="checkinBinForm" class="bin-form">
+                                                    <input type="hidden" name="Bin" value="" id="checkinBinContainerBin">
+                                                    <div class="form-group">
+                                                        <label class="bold">Final Weight</label><br>
+                                                        <input id="checkinBinWeight" name="NewWeight" type="text" placeholder="kg" required>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="bold">Size</label><br>
+                                                        <input type="radio" id="checkinLarge" name="Size" value="large">
+                                                        <label for="checkinLarge">Top Shelf Larges</label><br>
+                                                        <input type="radio" id="checkinMedium" name="Size" value="medium" required>
+                                                        <label for="checkinMedium">Good Mediums</label><br>
+                                                        <input type="radio" id="checkinSmall" name="Size" value="small" required>
+                                                        <label for="checkinSmall">Smalls</label><br>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="bold">State</label><br>
+                                                        <input type="radio" id="checkinBinColas" name="State" value="colas" required>
+                                                        <label for="checkinBinColas">Colas</label><br>
+                                                        <input type="radio" id="checkinBinBucked" name="State" value="bucked" required>
+                                                        <label for="checkinBinBucked">Bucked</label><br>
+                                                        <input type="radio" id="checkinBinTrimmed" name="State" value="trimmed" checked="checked">
+                                                        <label for="checkinBinTrimmed">Trimmed</label><br>
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+
+                                                    <div class="form-group">
+                                                        <label class="bold">Notes</label><br>
+                                                        <textarea cols="40" rows="5" name="Notes" id="checkinBinContainerNotes"></textarea>
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary btn-round">Check In & Print</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <div class="form-group">
-                                                <label class="bold">Harvest Date</label><br>
-                                                <input name="HarvestDate" type="date" min="{{ min }}" max="{{ max }}" required>
+                                </div>
+
+                                <!-- Harvest: Consolidate -->
+                                <div class="tab-pane" id="consolidateTab">
+                                    <div class="jumbotron">
+                                        <div class="row">
+                                            <div class="col-lg-8 text-center">
+                                                <label class="bold">Bin to Print</label>
+                                                <div class="bin-table" id="binTableContainer">
+                                                    <table class="table table-striped table-bordered">
+                                                        <thead class="thead-dark">
+                                                            <tr>
+                                                                <th scope="col">Bin #</th>
+                                                                <th scope="col">Cultivar</th>
+                                                                <th scope="col">Size</th>
+                                                                <th scope="col">State</th>
+                                                                <th scope="col">Notes</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="consolidateTableBody">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <input id="addConsolidateBinID" type="text" placeholder="bin #" />
+                                                <input type="button" id="addConsolidateBinButton" class="btn btn-primary btn-round" value="+" />
                                                 <br>
                                             </div>
-                                            <label class="bold">Notes</label><br>
-                                            <textarea cols="40" rows="5" name="Notes"></textarea>
-                                        </div>
+                                            <div class="col-lg-4">
+                                                <div class="container sending-msg hidden" id="consolidateBinProcessing">
+                                                    <h2>Consolidating ...</h2>
+                                                </div>
 
-                                        <div>
-                                            <button type="submit" class="btn btn-primary btn-round">Create & Print</button>
-                                            <button type="clear" class="btn btn-secondary btn-round">Clear</button>
+                                                <div class="container sending-msg hidden" id="consolidateBinPrinting">
+                                                    <h2>Consolidated! Printing...</h2>
+                                                </div>
+
+                                                <div class="container failed-msg hidden" id="consolidateBinFailed">
+                                                    <h2>Failed to consolidate bins. Please get help from Ryan.
+                                                    </h2>
+                                                </div>
+
+                                                <div class="container success-msg hidden" id="consolidateBinSuccess">
+                                                    <h2>Bins Consolidated and Printed!</h2>
+                                                </div>
+
+                                                <form name="consolidateBin" id="consolidateBinForm" class="bin-form">
+                                                    <input type="hidden" id="consolidateBinCultivar" name="Cultivar" value="">
+                                                    <input type="hidden" id="consolidateBinHarvestDate" name="HarvestDate" value="">
+                                                    <div class="form-group">
+                                                        <label class="bold">Water Activity</label><br>
+                                                        <input id="consolidateWA" name="WaterActivity" type="text" placeholder="wa" disabled>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="bold">Weight</label><br>
+                                                        <input id="consolidateBinWeight" name="NewWeight" type="text" placeholder="kg" required>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="bold">State</label><br>
+                                                        <input type="radio" id="consolidateBinColas" name="State" value="colas">
+                                                        <label for="consolidateBinColas">Colas</label><br>
+                                                        <input type="radio" id="consolidateBinBucked" name="State" value="bucked" required>
+                                                        <label for="consolidateBinBucked">Bucked</label><br>
+                                                        <input type="radio" id="consolidateBinTrimmed" name="State" value="trimmed" required>
+                                                        <label for="consolidateBinTrimmed">Trimmed</label><br>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="bold">Size</label><br>
+                                                        <input type="radio" id="consolidateLarge" name="Size" value="large">
+                                                        <label for="consolidateLarge">Top Shelf Larges</label><br>
+                                                        <input type="radio" id="consolidateMedium" name="Size" value="medium" required>
+                                                        <label for="consolidateMedium">Good Mediums</label><br>
+                                                        <input type="radio" id="consolidateSmall" name="Size" value="small" required>
+                                                        <label for="consolidateSmall">Smalls</label><br>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="bold">Notes</label><br>
+                                                        <textarea cols="40" rows="5" name="Notes" id="consolidateBinNotes"></textarea>
+                                                    </div>
+
+                                                    <button id="consolidateBinButton" type="submit" class="btn btn-primary btn-round" disabled="disabled">Consolidate Bins</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="checkoutBinTab">
-                        <div class="row">
-                            <div class="col-lg-4"></div>                            
-                            <div class="col-lg-4 text-center">
-                                <br>
-                                <h4>Select a bin</h4><br>
-                                <input id="checkoutBinID" type="text" placeholder="bin #">
-                                <input type="button" id="checkoutBinFilter" name="BinFilter" value="Find Bin" />
-                                <br>
-                            </div>
-                            <div class="col-lg-4"></div>                            
-                        </div>
-                        <div class="jumbotron">
-                            <div class="row">
-                                <div class="col-lg-6 text-center">
-                                    <label class="bold">Bin to Checkout</label>
-                                    <div class="bin-container" id="checkoutBinContainer"></div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="container sending-msg hidden" id="checkoutBinProcessing">
-                                        <h2>Processing ...</h2>
-                                    </div>
-                    
-                                    <div class="container failed-msg hidden" id="checkoutBinFailed">
-                                        <h2>Failed to check-out bin. Please get help from Ryan.
-                                        </h2>
-                                    </div>
-                    
-                                    <div class="container success-msg hidden" id="checkoutBinSuccess">
-                                        <h2>Bin Checked out!</h2>
-                                    </div>
 
-                                    <form name="checkoutBin" id="checkoutBinForm" class="bin-form">
-                                        <input type="hidden" name="Bin" value="" id="checkoutBinContainerBin">
-                                        <input type="hidden" name="State" value="checkedout">
-                                        <div class="form-group">
-                                            <label class="bold">Person checking out material</label><br>
-                                            <input name="Trimmer" type="text" placeholder="name" required>
+                                <!-- Harvest: RePrint -->
+                                <div class="tab-pane" id="printBinTab">
+                                    <div class="row">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-4 text-center">
+                                            <br>
+                                            <h4> Select a bin</h4><br>
+                                            <input id="printBinID" type="text" placeholder="bin #">
+                                            <input type="button" id="printBinFilter" name="BinFilter" value="Find Bin" />
                                             <br>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label class="bold">Notes</label><br>
-                                            <textarea cols="40" rows="5" name="Notes" id="checkoutBinContainerNotes"></textarea>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-primary btn-round">Check Out</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="checkinBinTab">
-                        <div class="row">
-                            <div class="col-lg-4"></div>                            
-                            <div class="col-lg-4 text-center">
-                                <br>
-                                <h4>Select a bin</h4><br>
-                                <input id="checkinBinID" type="text" placeholder="bin #">
-                                <input type="button" id="checkinBinFilter" name="BinFilter" value="Find Bin" />
-                                <br>
-                            </div>
-                            <div class="col-lg-4"></div>                            
-                        </div>
-                        <div class="jumbotron">
-                            <div class="row">
-                                <div class="col-lg-4 text-center">
-                                    <label class="bold">Bin to Checkin</label>
-                                    <div class="bin-container" id="checkinBinContainer">
+                                        <div class="col-lg-4"></div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="container sending-msg hidden" id="checkinBinProcessing">
-                                        <h2>Processing ...</h2>
-                                    </div>
+                                    <div class="jumbotron">
+                                        <div class="row">
+                                            <div class="col-lg-6 text-center">
+                                                <label class="bold">Bin to Print</label>
+                                                <div class="bin-container" id="printBinContainer">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="container sending-msg hidden" id="printBinProcessing">
+                                                    <h2>Printing ...</h2>
+                                                </div>
 
-                                    <div class="container sending-msg hidden" id="checkinBinPrinting">
-                                        <h2>Bin checked-in. Printing ...</h2>
-                                    </div>
-                    
-                                    <div class="container failed-msg hidden" id="checkinBinFailed">
-                                        <h2>Failed to check-in bin. Please get help from Ryan.
-                                        </h2>
-                                    </div>
-                    
-                                    <div class="container success-msg hidden" id="checkinBinSuccess">
-                                        <h2>Bin is Complete!<br>New label printed</h2>
-                                    </div>
+                                                <div class="container failed-msg hidden" id="printBinFailed">
+                                                    <h2>Failed to reprint bin. Please get help from Ryan.
+                                                    </h2>
+                                                </div>
 
-                                    <form name="checkinBin" id="checkinBinForm" class="bin-form">
-                                        <input type="hidden" name="Bin" value="" id="checkinBinContainerBin">
-                                        <div class="form-group">
-                                            <label class="bold">Final Weight</label><br>
-                                            <input id="checkinBinWeight" name="NewWeight" type="text" placeholder="kg" required>
-                                            <br>
-                                        </div>
+                                                <div class="container success-msg hidden" id="printBinSuccess">
+                                                    <h2>Printed!</h2>
+                                                </div>
 
-                                        <div class="form-group">
-                                            <label class="bold">Size</label><br>
-                                            <input type="radio" id="checkinLarge" name="Size" value="large">
-                                            <label for="checkinLarge">Top Shelf Larges</label><br>
-                                            <input type="radio" id="checkinMedium" name="Size" value="medium" required>
-                                            <label for="checkinMedium">Good Mediums</label><br>
-                                            <input type="radio" id="checkinSmall" name="Size" value="small" required>
-                                            <label for="checkinSmall">Smalls</label><br>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="bold">State</label><br>
-                                            <input type="radio" id="checkinBinColas" name="State" value="colas" required>
-                                            <label for="checkinBinColas">Colas</label><br>
-                                            <input type="radio" id="checkinBinBucked" name="State" value="bucked" required>
-                                            <label for="checkinBinBucked">Bucked</label><br>
-                                            <input type="radio" id="checkinBinTrimmed" name="State" value="trimmed" checked="checked">
-                                            <label for="checkinBinTrimmed">Trimmed</label><br>
-                                            <br>
+                                                <form name="printBin" id="printBinForm" class="bin-form">
+                                                    <input type="hidden" name="Bin" value="" id="printBinContainerBin">
+                                                    <button type="submit" class="btn btn-primary btn-round">Print</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-
-                                        <div class="form-group">
-                                            <label class="bold">Notes</label><br>
-                                            <textarea cols="40" rows="5" name="Notes" id="checkinBinContainerNotes"></textarea>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-primary btn-round">Check In & Print</button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="tab-pane" id="consolidateTab">
-                        <!-- FIXME -->
-                        <div class="jumbotron">
-                            <div class="row">
-                                <div class="col-lg-8 text-center">
-                                    <label class="bold">Bin to Print</label>
-                                    <div class="bin-table" id="binTableContainer">
-                                        <table class="table table-striped table-bordered">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th scope="col">Bin #</th>
-                                                    <th scope="col">Cultivar</th>
-                                                    <th scope="col">Size</th>
-                                                    <th scope="col">State</th>
-                                                    <th scope="col">Notes</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="consolidateTableBody">
-                                            </tbody>
-                                        </table>
+                    <!-- Sales -->
+                    <div class="tab-pane fade in" id="salesSelection">
+                        <div class="tabbable">
+                            <!-- Sales Nav -->
+                            <ul class="nav nav-tabs nav-fill" id="salesTabSelection" role="salesTablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#newOrder" data-toggle="tab">New Order</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#printPDF" data-toggle="tab">Print PDF</a>
+                                </li>
+                            </ul>
+
+                            <!-- SALES Content -->
+                            <div class="tab-content" id="salesTabContent">
+                                <!-- Sales: New Order -->
+                                <div class="tab-pane active" id="newOrder">
+                                    <div class="row">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-4 text-center">New Order</div>
+                                        <div class="col-lg-4"></div>
                                     </div>
-                                    <input id="addConsolidateBinID" type="text" placeholder="bin #" />
-                                    <input type="button" id="addConsolidateBinButton" class="btn btn-primary btn-round" value="+" />
-                                    <br>
+                                    <div class="jumbotron">
+                                        <div class="row">
+                                            <div class="col-lg-6 text-center">
+                                                <label class="bold">New Order</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="container sending-msg hidden" id="consolidateBinProcessing">
-                                        <h2>Consolidating ...</h2>
+
+                                <!-- Sales: Print PDF -->
+                                <div class="tab-pane" id="printPDF">
+                                    <div class="jumbotron">
+                                        <div class="row">
+                                            <div class="col-lg-4 text-center">
+                                            </div>
+                                            <div class="col-lg-4 text-center">
+                                                <div class="container sending-msg hidden" id="printPDFProcessing">
+                                                    <h2>Printing ...</h2>
+                                                </div>
+
+                                                <div class="container failed-msg hidden" id="printPDFFailed">
+                                                    <h2>Failed to the PDF. Please get help from Ryan.
+                                                    </h2>
+                                                </div>
+
+                                                <div class="container success-msg hidden" id="printPDFSuccess">
+                                                    <h2>Printed!</h2>
+                                                </div>
+
+                                                <form id="printPDFForm" enctype="multipart/form-data">
+                                                    <label class="bold">PDF to Print</label><br>
+                                                    <input id="print-pdf-file" type="file" sccept=".pdf"/>
+                                                </form>
+                                            </div>
+                                            <div class="col-lg-4">
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="container sending-msg hidden" id="consolidateBinPrinting">
-                                        <h2>Consolidated! Printing...</h2>
-                                    </div>
-                    
-                                    <div class="container failed-msg hidden" id="consolidateBinFailed">
-                                        <h2>Failed to consolidate bins. Please get help from Ryan.
-                                        </h2>
-                                    </div>
-                    
-                                    <div class="container success-msg hidden" id="consolidateBinSuccess">
-                                        <h2>Bins Consolidated and Printed!</h2>
-                                    </div>
-
-                                    <form name="consolidateBin" id="consolidateBinForm" class="bin-form">
-                                        <input type="hidden" id="consolidateBinCultivar" name="Cultivar" value="">
-                                        <input type="hidden" id="consolidateBinHarvestDate" name="HarvestDate" value="">
-                                        <div class="form-group">
-                                            <label class="bold">Water Activity</label><br>
-                                            <input id="consolidateWA" name="WaterActivity" type="text" placeholder="wa" disabled>
-                                            <br>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="bold">Weight</label><br>
-                                            <input id="consolidateBinWeight" name="NewWeight" type="text" placeholder="kg" required>
-                                            <br>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="bold">State</label><br>
-                                            <input type="radio" id="consolidateBinColas" name="State" value="colas">
-                                            <label for="consolidateBinColas">Colas</label><br>
-                                            <input type="radio" id="consolidateBinBucked" name="State" value="bucked" required>
-                                            <label for="consolidateBinBucked">Bucked</label><br>
-                                            <input type="radio" id="consolidateBinTrimmed" name="State" value="trimmed" required>
-                                            <label for="consolidateBinTrimmed">Trimmed</label><br>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="bold">Size</label><br>
-                                            <input type="radio" id="consolidateLarge" name="Size" value="large">
-                                            <label for="consolidateLarge">Top Shelf Larges</label><br>
-                                            <input type="radio" id="consolidateMedium" name="Size" value="medium" required>
-                                            <label for="consolidateMedium">Good Mediums</label><br>
-                                            <input type="radio" id="consolidateSmall" name="Size" value="small" required>
-                                            <label for="consolidateSmall">Smalls</label><br>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="bold">Notes</label><br>
-                                            <textarea cols="40" rows="5" name="Notes" id="consolidateBinNotes"></textarea>
-                                        </div>
-
-                                        <button id="consolidateBinButton" type="submit" class="btn btn-primary btn-round" disabled="disabled">Consolidate Bins</button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-					<div class="tab-pane" id="printBinTab">
-                        <div class="row">
-                            <div class="col-lg-4"></div>                            
-                            <div class="col-lg-4 text-center">
-                                <br>
-                                <h4> Select a bin</h4><br>
-                                <input id="printBinID" type="text" placeholder="bin #">
-                                <input type="button" id="printBinFilter" name="BinFilter" value="Find Bin" />
-                                <br>
-                            </div>
-                            <div class="col-lg-4"></div>                            
-                        </div>
-                        <div class="jumbotron">
-                            <div class="row">
-                                <div class="col-lg-6 text-center">
-                                    <label class="bold">Bin to Print</label>
-                                    <div class="bin-container" id="printBinContainer">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="container sending-msg hidden" id="printBinProcessing">
-                                        <h2>Printing ...</h2>
-                                    </div>
-                    
-                                    <div class="container failed-msg hidden" id="printBinFailed">
-                                        <h2>Failed to reprint bin. Please get help from Ryan.
-                                        </h2>
-                                    </div>
-                    
-                                    <div class="container success-msg hidden" id="printBinSuccess">
-                                        <h2>Printed!</h2>
-                                    </div>
-
-                                    <form name="printBin" id="printBinForm" class="bin-form">
-                                        <input type="hidden" name="Bin" value="" id="printBinContainerBin">
-                                        <button type="submit" class="btn btn-primary btn-round">Print</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 				</div>
 			</div>
 		</div>
